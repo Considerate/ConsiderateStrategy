@@ -1,0 +1,3 @@
+var Shape = BaseObject.extend({
+    
+})
