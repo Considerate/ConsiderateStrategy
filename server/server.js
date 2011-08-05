@@ -10,7 +10,7 @@ eval(filedata);
 
 var Server = BaseObject.extend(
 {
-    framerate: 80,
+    framerate: 20,
     info: {
         lastFrameTime: 0,
         runningFrameTime: 0        
@@ -140,24 +140,17 @@ var Server = BaseObject.extend(
             
             socket.on("shoot", function()
             {
-                if(self.cache.players[socket.id] === undefined)
-                {
-                    self.cache.players[socket.id] = {};
-                }
+                var me = self.cache.players[socket.id];
+                var speed = 5;
                 
-                if(self.cache.players[socket.id].position === undefined)
-                {
-                    self.cache.players[socket.id].position = {
-                        x:0, 
-                        y: 0
-                    };
-                }
-                
-                self.cache.players[socket.id].position.y += 1;
-                
-                //Send results to other players
-                self.cache.players[socket.id].id = socket.id;
-                io.sockets.emit("player update",self.cache.players[socket.id]);
+                var bullet = {};
+                bullet.position = me.position;
+                bullet.velocity = {
+                    x: 5*speed, 
+                    y : 0
+                };
+                bullet.id = self.generateId();
+                self.bullets[bullet.id] = bullet;
             });
     
     
@@ -167,11 +160,25 @@ var Server = BaseObject.extend(
                 delete self.cache.players[socket.id];
                 io.sockets.emit("player disconnected",socket.id);
             });
-    
+
         });
+        
+        this.gameLoop();
     },
     update: function(time) {
         
+        //Move all bullets
+        for(var index in this.cache.bullets)
+        {
+            if(this.cache.bullets.hasOwnProperty(index))
+            {
+                var bullet = this.cache.bullets[index];
+                bullet.position.x += bullet.velocity.x;
+                bullet.position.y += bullet.velocity.y;
+            }
+        }
+        
+        io.sockets.emit("bullets",this.cache.bullets);
     },
     gameLoop: function() {
         //Handle time
