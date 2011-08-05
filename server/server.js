@@ -150,7 +150,7 @@ var Server = BaseObject.extend(
                     y : 0
                 };
                 bullet.id = self.generateId();
-                self.bullets[bullet.id] = bullet;
+                self.cache.bullets[bullet.id] = bullet;
             });
     
     
