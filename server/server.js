@@ -4,7 +4,7 @@ io.set('log level', 1);
 var fs = require('fs');
 
 // Read and eval library
-var filedata = fs.readFileSync('./BaseObject.js','utf8');
+var filedata = fs.readFileSync('BaseObject.js','utf8');
 eval(filedata);
 
 
