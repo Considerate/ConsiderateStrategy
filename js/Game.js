@@ -96,7 +96,7 @@ var Game = BaseObject.extend({
         
         for (key in this.world.bullets) {
             if (this.world.bullets.hasOwnProperty(key)) {
-                var bullet = this.world.players[key];
+                var bullet = this.world.bullets[key];
                 this.context.beginPath();
                 this.context.arc(bullet.position.x,bullet.position.y,bullet.radius,0,Math.PI*2,true);
                 this.context.closePath();
