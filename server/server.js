@@ -144,7 +144,8 @@ var Server = BaseObject.extend(
                 var speed = 5;
                 
                 var bullet = {};
-                bullet.position = me.position;
+                bullet.position.x = me.position.x;
+                bullet.position.y = me.position.y;
                 bullet.velocity = {
                     x: 5*speed, 
                     y : 0
