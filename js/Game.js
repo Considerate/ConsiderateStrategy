@@ -32,6 +32,10 @@ var Game = BaseObject.extend({
             self.world.players[player.id] = Player.create(player);
         });
         
+        socket.on("bullets",function(bullets){
+            self.world.bullets = bullets;
+        });
+        
         socket.on("player disconnected",function(id)
         {
             //Remove disconnected player from cache
@@ -39,7 +43,6 @@ var Game = BaseObject.extend({
         });
  
         $(document).keydown(function (event){
-            console.log("key pressed",event.keyCode);
             // handle cursor keys
             if (event.keyCode == 65) {
                 // go left
@@ -77,8 +80,8 @@ var Game = BaseObject.extend({
         
     },
     render: function(time) {
-        
-        for (var key in this.world.players) {
+        var key;
+        for (key in this.world.players) {
             if (this.world.players.hasOwnProperty(key)) {
                 var player = this.world.players[key];
                 
@@ -90,6 +93,17 @@ var Game = BaseObject.extend({
                 this.context.fillStyle = oldFillStyle;
             }
         }
+        
+        for (key in this.world.bullets) {
+            if (this.world.bullets.hasOwnProperty(key)) {
+                var bullet = this.world.players[key];
+                this.context.beginPath();
+                this.context.arc(bullet.position.x,bullet.position.y,bullet.radius,0,Math.PI*2,true);
+                this.context.closePath();
+                this.context.fill();
+            }
+        }
+        /*
         this.world.objects.forEach(function(object){
             if(Bullet.isPrototypeOf(object)) {
                 //Draw bullet 
@@ -104,7 +118,7 @@ var Game = BaseObject.extend({
                 var y = object.position.y;
                 this.context.fillRect(x-5,y-5,10,10);
             }
-        },this);
+        },this);*/
     },
     update: function(time) {
         
@@ -127,7 +141,7 @@ var Game = BaseObject.extend({
             }
         }*/
        
-        
+        /*
         this.world.objects.forEach(function(object){
             //Move moving objects
             if(Bullet.isPrototypeOf(object)){
@@ -136,7 +150,7 @@ var Game = BaseObject.extend({
             }
             
         //Remove objects that are to be removed
-        });
+        });*/
     },
     gameLoop: function() {
         
