@@ -9,7 +9,7 @@ and open the template in the editor.
         <link rel="stylesheet" type="text/css" href="css/Main.css" />
         <title></title>
         <script type="text/javascript" src="js/lib/jquery-1.6.2.js"></script>
-        <script src="//78.70.209.11/socket.io/socket.io.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
 
         <script type="text/javascript" src="js/BaseObject.js"></script>
         <script type="text/javascript" src="js/Shape.js"></script>

@@ -13,7 +13,7 @@ var Game = BaseObject.extend({
         this.init();
         this.gameLoop();
         
-        var socket = io.connect('http://78.70.209.11');
+        var socket = io.connect('');
         this.socket = socket;
         
         var self = this;

@@ -30,112 +30,82 @@ var Server = BaseObject.extend(
             //Player joined
             socket.on("player joined", function(data)
             {
-                if(self.cache.players[socket.id] === undefined)
+                var player = self.cache.players[socket.id];
+                if(player === undefined)
                 {
-                    self.cache.players[socket.id] = {};
+                    player = {};
                 }
                 //Set color and position to cache
-                self.cache.players[socket.id].color = self.randomizeColor();
-                self.cache.players[socket.id].position = {
+                player.color = self.randomizeColor();
+                player.position = {
                     x: 50, 
                     y: 50
                 };
+                player.orientation = {
+                    x: 1, 
+                    y: 0
+                };
         
                 //Send results to other players
-                self.cache.players[socket.id].id = socket.id;
-                io.sockets.emit("player update",self.cache.players[socket.id]);
+                player.id = socket.id;
+                io.sockets.emit("player update",player);
             });
             
             //move player left and resend back to clients
             socket.on("left", function()
             {
-                if(self.cache.players[socket.id] === undefined)
-                {
-                    self.cache.players[socket.id] = {};
-                }
+                var player = self.cache.players[socket.id];
                 
-                if(self.cache.players[socket.id].position === undefined)
-                {
-                    self.cache.players[socket.id].position = {
-                        x:0, 
-                        y: 0
-                    };
-                }
-                
-                self.cache.players[socket.id].position.x -= 1;
+                self.move(player,{
+                    x: -1, 
+                    y: 0
+                });
         
                 //Send results to other players
-                self.cache.players[socket.id].id = socket.id;
-                io.sockets.emit("player update",self.cache.players[socket.id]);
+                player.id = socket.id;
+                io.sockets.emit("player update",player);
             });
             
             //move player right and resend back to clients
             socket.on("right", function()
             {
-                if(self.cache.players[socket.id] === undefined)
-                {
-                    self.cache.players[socket.id] = {};
-                }
-                
-                if(self.cache.players[socket.id].position === undefined)
-                {
-                    self.cache.players[socket.id].position = {
-                        x:0, 
-                        y: 0
-                    };
-                }
-                
-                self.cache.players[socket.id].position.x += 1;
+                var player = self.cache.players[socket.id];
+                self.move(player,{
+                    x: 1, 
+                    y: 0
+                });
                 
                 //Send results to other players
-                self.cache.players[socket.id].id = socket.id;
-                io.sockets.emit("player update",self.cache.players[socket.id]);
+                player.id = socket.id;
+                io.sockets.emit("player update",player);
             });
             
             //move player up and resend back to clients
             socket.on("up", function()
             {
-                if(self.cache.players[socket.id] === undefined)
-                {
-                    self.cache.players[socket.id] = {};
-                }
-        
-                if(self.cache.players[socket.id].position === undefined)
-                {
-                    self.cache.players[socket.id].position = {
-                        x:0, 
-                        y: 0
-                    };
-                }
-                
-                self.cache.players[socket.id].position.y -= 1;
+                var player = self.cache.players[socket.id];
+                self.move(player,{
+                    x: 0, 
+                    y: -1
+                });
                 
                 //Send results to other players
-                self.cache.players[socket.id].id = socket.id;
-                io.sockets.emit("player update",self.cache.players[socket.id]);
+                player.id = socket.id;
+                io.sockets.emit("player update",player);
             });
             
             //move player down and resend back to clients
             socket.on("down", function()
             {
-                if(self.cache.players[socket.id] === undefined)
-                {
-                    self.cache.players[socket.id] = {};
-                }
-                
-                if(self.cache.players[socket.id].position === undefined)
-                {
-                    self.cache.players[socket.id].position = {
-                        x:0, 
-                        y: 0
-                    };
-                }
-                
-                self.cache.players[socket.id].position.y += 1;
+                var player = self.cache.players[socket.id];
+                self.move(player,{
+                    x: 0, 
+                    y: 1
+                });
                 
                 //Send results to other players
-                self.cache.players[socket.id].id = socket.id;
-                io.sockets.emit("player update",self.cache.players[socket.id]);
+                player.id = socket.id;
+                io.sockets.emit("player update",player);
             });
             
             socket.on("shoot", function()
@@ -165,6 +135,29 @@ var Server = BaseObject.extend(
         });
         
         this.gameLoop();
+    },
+    move: function(player,orientation)
+    {
+        if(player === undefined)
+        {
+            player = {};
+        }
+                
+        if(player.position === undefined)
+        {
+            player.position = {
+                x:0, 
+                y: 0
+            };
+        }
+                
+        player.orientation = {
+            x: orientation.x, 
+            y: orientation.y
+        };
+                
+        player.position.x += orientation.x;
+        player.position.y += orientation.y;
     },
     update: function(time) {
         
